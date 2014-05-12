@@ -1,0 +1,563 @@
+   1               		.file	"Halo_Slave.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               	.global	__vector_6
+  18               	__vector_6:
+  19               	.LFB3:
+  20               	.LM1:
+  21 0000 1F92      		push __zero_reg__
+  22 0002 0F92      		push r0
+  23 0004 0FB6      		in r0,__SREG__
+  24 0006 0F92      		push r0
+  25 0008 1124      		clr __zero_reg__
+  26 000a 8F93      		push r24
+  27 000c 9F93      		push r25
+  28               	/* prologue: Signal */
+  29               	/* frame size = 0 */
+  30               	.LM2:
+  31 000e 82E0      		ldi r24,lo8(2)
+  32 0010 88BF      		out 88-32,r24
+  33               	.LM3:
+  34 0012 8091 0000 		lds r24,timer_1k
+  35 0016 9091 0000 		lds r25,(timer_1k)+1
+  36 001a 0196      		adiw r24,1
+  37 001c 9093 0000 		sts (timer_1k)+1,r25
+  38 0020 8093 0000 		sts timer_1k,r24
+  39               	/* epilogue start */
+  40               	.LM4:
+  41 0024 9F91      		pop r25
+  42 0026 8F91      		pop r24
+  43 0028 0F90      		pop r0
+  44 002a 0FBE      		out __SREG__,r0
+  45 002c 0F90      		pop r0
+  46 002e 1F90      		pop __zero_reg__
+  47 0030 1895      		reti
+  48               	.LFE3:
+  50               	.global	LED_ChangeColor
+  52               	LED_ChangeColor:
+  53               	.LFB4:
+  54               	.LM5:
+  55               	.LVL0:
+  56               	/* prologue: function */
+  57               	/* frame size = 0 */
+  58 0032 982F      		mov r25,r24
+  59               	.LM6:
+  60 0034 8823      		tst r24
+  61 0036 01F0      		breq .L4
+  62               	.LM7:
+  63 0038 8FB5      		in r24,79-32
+  64               	.LVL1:
+  65 003a 8062      		ori r24,lo8(32)
+  66 003c 8FBD      		out 79-32,r24
+  67               	.LM8:
+  68 003e 98BD      		out 72-32,r25
+  69 0040 00C0      		rjmp .L5
+  70               	.LVL2:
+  71               	.L4:
+  72               	.LM9:
+  73 0042 8FB5      		in r24,79-32
+  74               	.LVL3:
+  75 0044 8F7D      		andi r24,lo8(-33)
+  76 0046 8FBD      		out 79-32,r24
+  77               	.L5:
+  78               	.LM10:
+  79 0048 6623      		tst r22
+  80 004a 01F0      		breq .L6
+  81               	.LM11:
+  82 004c 8FB5      		in r24,79-32
+  83 004e 8068      		ori r24,lo8(-128)
+  84 0050 8FBD      		out 79-32,r24
+  85               	.LM12:
+  86 0052 6ABD      		out 74-32,r22
+  87 0054 00C0      		rjmp .L7
+  88               	.L6:
+  89               	.LM13:
+  90 0056 8FB5      		in r24,79-32
+  91 0058 8F77      		andi r24,lo8(127)
+  92 005a 8FBD      		out 79-32,r24
+  93               	.L7:
+  94               	.LM14:
+  95 005c 4423      		tst r20
+  96 005e 01F0      		breq .L8
+  97               	.LM15:
+  98 0060 80B7      		in r24,80-32
+  99 0062 8068      		ori r24,lo8(-128)
+ 100 0064 80BF      		out 80-32,r24
+ 101               	.LM16:
+ 102 0066 46BF      		out 86-32,r20
+ 103 0068 0895      		ret
+ 104               	.L8:
+ 105               	.LM17:
+ 106 006a 80B7      		in r24,80-32
+ 107 006c 8F77      		andi r24,lo8(127)
+ 108 006e 80BF      		out 80-32,r24
+ 109 0070 0895      		ret
+ 110               	.LFE4:
+ 112               	.global	checksum
+ 114               	checksum:
+ 115               	.LFB5:
+ 116               	.LM18:
+ 117               	.LVL4:
+ 118               	/* prologue: function */
+ 119               	/* frame size = 0 */
+ 120 0072 AC01      		movw r20,r24
+ 121               	.LM19:
+ 122 0074 30E0      		ldi r19,lo8(0)
+ 123               	.LVL5:
+ 124 0076 20E0      		ldi r18,lo8(0)
+ 125               	.LVL6:
+ 126 0078 00C0      		rjmp .L12
+ 127               	.LVL7:
+ 128               	.L13:
+ 129               	.LM20:
+ 130 007a E40F      		add r30,r20
+ 131 007c F51F      		adc r31,r21
+ 132               	.LVL8:
+ 133 007e 8081      		ld r24,Z
+ 134 0080 280F      		add r18,r24
+ 135               	.LM21:
+ 136 0082 3F5F      		subi r19,lo8(-(1))
+ 137               	.LVL9:
+ 138               	.L12:
+ 139 0084 E32F      		mov r30,r19
+ 140 0086 F0E0      		ldi r31,lo8(0)
+ 141 0088 E617      		cp r30,r22
+ 142 008a F707      		cpc r31,r23
+ 143 008c 04F0      		brlt .L13
+ 144               	.LVL10:
+ 145               	.LM22:
+ 146 008e 822F      		mov r24,r18
+ 147               	/* epilogue start */
+ 148 0090 0895      		ret
+ 149               	.LFE5:
+ 151               	.global	ioinit
+ 153               	ioinit:
+ 154               	.LFB7:
+ 155               	.LM23:
+ 156               	/* prologue: function */
+ 157               	/* frame size = 0 */
+ 158               	.LM24:
+ 159 0092 87B3      		in r24,55-32
+ 160 0094 8C61      		ori r24,lo8(28)
+ 161 0096 87BB      		out 55-32,r24
+ 162               	.LM25:
+ 163 0098 18BA      		out 56-32,__zero_reg__
+ 164               	.LM26:
+ 165 009a 8D9A      		sbi 49-32,5
+ 166               	.LM27:
+ 167 009c 9598      		cbi 50-32,5
+ 168               	.LM28:
+ 169 009e 81B3      		in r24,49-32
+ 170 00a0 807F      		andi r24,lo8(-16)
+ 171 00a2 81BB      		out 49-32,r24
+ 172               	.LM29:
+ 173 00a4 82B3      		in r24,50-32
+ 174 00a6 8F60      		ori r24,lo8(15)
+ 175 00a8 82BB      		out 50-32,r24
+ 176               	.LM30:
+ 177 00aa 85B7      		in r24,85-32
+ 178 00ac 8F77      		andi r24,lo8(127)
+ 179 00ae 85BF      		out 85-32,r24
+ 180               	.LM31:
+ 181 00b0 80E8      		ldi r24,lo8(-128)
+ 182 00b2 86BD      		out 70-32,r24
+ 183               	.LM32:
+ 184 00b4 92E0      		ldi r25,lo8(2)
+ 185 00b6 96BD      		out 70-32,r25
+ 186               	.LM33:
+ 187 00b8 80B7      		in r24,80-32
+ 188 00ba 8368      		ori r24,lo8(-125)
+ 189 00bc 80BF      		out 80-32,r24
+ 190               	.LM34:
+ 191 00be 93BF      		out 83-32,r25
+ 192               	.LM35:
+ 193 00c0 99BF      		out 89-32,r25
+ 194               	.LM36:
+ 195 00c2 8FB5      		in r24,79-32
+ 196 00c4 816A      		ori r24,lo8(-95)
+ 197 00c6 8FBD      		out 79-32,r24
+ 198               	.LM37:
+ 199 00c8 8EB5      		in r24,78-32
+ 200 00ca 8A60      		ori r24,lo8(10)
+ 201 00cc 8EBD      		out 78-32,r24
+ 202               	.LM38:
+ 203 00ce 16BE      		out 86-32,__zero_reg__
+ 204               	.LM39:
+ 205 00d0 1ABC      		out 74-32,__zero_reg__
+ 206               	.LM40:
+ 207 00d2 18BC      		out 72-32,__zero_reg__
+ 208               	.LM41:
+ 209               	/* #APP */
+ 210               	 ;  344 "Halo_Slave.c" 1
+ 211 00d4 7894      		sei
+ 212               	 ;  0 "" 2
+ 213               	/* epilogue start */
+ 214               	.LM42:
+ 215               	/* #NOAPP */
+ 216 00d6 0895      		ret
+ 217               	.LFE7:
+ 219               	.global	delay_ms
+ 221               	delay_ms:
+ 222               	.LFB8:
+ 223               	.LM43:
+ 224               	.LVL11:
+ 225               	/* prologue: function */
+ 226               	/* frame size = 0 */
+ 227               	.LM44:
+ 228 00d8 2091 0000 		lds r18,timer_1k
+ 229 00dc 3091 0000 		lds r19,(timer_1k)+1
+ 230               	.LVL12:
+ 231 00e0 280F      		add r18,r24
+ 232 00e2 391F      		adc r19,r25
+ 233               	.L18:
+ 234               	.LM45:
+ 235 00e4 8091 0000 		lds r24,timer_1k
+ 236 00e8 9091 0000 		lds r25,(timer_1k)+1
+ 237               	.LVL13:
+ 238 00ec 8217      		cp r24,r18
+ 239 00ee 9307      		cpc r25,r19
+ 240 00f0 01F4      		brne .L18
+ 241               	/* epilogue start */
+ 242               	.LM46:
+ 243 00f2 0895      		ret
+ 244               	.LFE8:
+ 246               	.global	main
+ 248               	main:
+ 249               	.LFB6:
+ 250               	.LM47:
+ 251 00f4 EF92      		push r14
+ 252 00f6 FF92      		push r15
+ 253 00f8 0F93      		push r16
+ 254 00fa 1F93      		push r17
+ 255               	/* prologue: function */
+ 256               	/* frame size = 0 */
+ 257               	.LM48:
+ 258 00fc 1092 0000 		sts (timer_1k)+1,__zero_reg__
+ 259 0100 1092 0000 		sts timer_1k,__zero_reg__
+ 260               	.LM49:
+ 261 0104 00D0      		rcall ioinit
+ 262               	.LM50:
+ 263 0106 80B3      		in r24,48-32
+ 264               	.LM51:
+ 265 0108 8F70      		andi r24,lo8(15)
+ 266 010a 00D0      		rcall USI_TWI_Slave_Initialise
+ 267 010c 00C0      		rjmp .L22
+ 268               	.L23:
+ 269               	.LM52:
+ 270 010e 00D0      		rcall USI_TWI_Receive_Byte
+ 271               	.L22:
+ 272               	.LM53:
+ 273 0110 00D0      		rcall USI_TWI_Data_In_Receive_Buffer
+ 274 0112 8823      		tst r24
+ 275 0114 01F4      		brne .L23
+ 276               	.LM54:
+ 277 0116 8FEF      		ldi r24,lo8(-1)
+ 278 0118 6FEF      		ldi r22,lo8(-1)
+ 279 011a 4FEF      		ldi r20,lo8(-1)
+ 280 011c 22E3      		ldi r18,lo8(50)
+ 281 011e 00D0      		rcall LED_ChangeColor
+ 282               	.LBB12:
+ 283               	.LBB13:
+ 284               	.LM55:
+ 285 0120 2091 0000 		lds r18,timer_1k
+ 286 0124 3091 0000 		lds r19,(timer_1k)+1
+ 287               	.LVL14:
+ 288 0128 2851      		subi r18,lo8(-(1000))
+ 289 012a 3C4F      		sbci r19,hi8(-(1000))
+ 290               	.L24:
+ 291               	.LM56:
+ 292 012c 8091 0000 		lds r24,timer_1k
+ 293 0130 9091 0000 		lds r25,(timer_1k)+1
+ 294 0134 8217      		cp r24,r18
+ 295 0136 9307      		cpc r25,r19
+ 296 0138 01F4      		brne .L24
+ 297               	.LBE13:
+ 298               	.LBE12:
+ 299               	.LM57:
+ 300 013a 8FEF      		ldi r24,lo8(-1)
+ 301 013c 60E0      		ldi r22,lo8(0)
+ 302 013e 4FEF      		ldi r20,lo8(-1)
+ 303 0140 22E3      		ldi r18,lo8(50)
+ 304               	.LVL15:
+ 305 0142 00D0      		rcall LED_ChangeColor
+ 306               	.LM58:
+ 307 0144 959A      		sbi 50-32,5
+ 308               	.LM59:
+ 309 0146 87B3      		in r24,55-32
+ 310 0148 837E      		andi r24,lo8(-29)
+ 311 014a 87BB      		out 55-32,r24
+ 312               	.LM60:
+ 313 014c 87B3      		in r24,55-32
+ 314 014e 8C61      		ori r24,lo8(28)
+ 315 0150 87BB      		out 55-32,r24
+ 316               	.LBB14:
+ 317               	.LBB15:
+ 318               	.LM61:
+ 319 0152 2091 0000 		lds r18,timer_1k
+ 320 0156 3091 0000 		lds r19,(timer_1k)+1
+ 321               	.LVL16:
+ 322 015a 2851      		subi r18,lo8(-(1000))
+ 323 015c 3C4F      		sbci r19,hi8(-(1000))
+ 324               	.L25:
+ 325               	.LM62:
+ 326 015e 8091 0000 		lds r24,timer_1k
+ 327 0162 9091 0000 		lds r25,(timer_1k)+1
+ 328 0166 8217      		cp r24,r18
+ 329 0168 9307      		cpc r25,r19
+ 330 016a 01F4      		brne .L25
+ 331               	.LBE15:
+ 332               	.LBE14:
+ 333               	.LM63:
+ 334 016c 9598      		cbi 50-32,5
+ 335               	.LM64:
+ 336 016e 8FEF      		ldi r24,lo8(-1)
+ 337 0170 60E0      		ldi r22,lo8(0)
+ 338 0172 40E0      		ldi r20,lo8(0)
+ 339 0174 22E3      		ldi r18,lo8(50)
+ 340               	.LVL17:
+ 341 0176 00D0      		rcall LED_ChangeColor
+ 342               	.LM65:
+ 343 0178 8FEF      		ldi r24,lo8(-1)
+ 344 017a 60E0      		ldi r22,lo8(0)
+ 345 017c 40E0      		ldi r20,lo8(0)
+ 346 017e 22E3      		ldi r18,lo8(50)
+ 347 0180 00D0      		rcall LED_ChangeColor
+ 348               	.LBB16:
+ 349               	.LBB17:
+ 350               	.LM66:
+ 351 0182 2091 0000 		lds r18,timer_1k
+ 352 0186 3091 0000 		lds r19,(timer_1k)+1
+ 353               	.LVL18:
+ 354 018a 2851      		subi r18,lo8(-(1000))
+ 355 018c 3C4F      		sbci r19,hi8(-(1000))
+ 356               	.L26:
+ 357               	.LM67:
+ 358 018e 8091 0000 		lds r24,timer_1k
+ 359 0192 9091 0000 		lds r25,(timer_1k)+1
+ 360 0196 8217      		cp r24,r18
+ 361 0198 9307      		cpc r25,r19
+ 362 019a 01F4      		brne .L26
+ 363               	.LBE17:
+ 364               	.LBE16:
+ 365               	.LM68:
+ 366 019c 80E0      		ldi r24,lo8(0)
+ 367 019e 6FEF      		ldi r22,lo8(-1)
+ 368 01a0 40E0      		ldi r20,lo8(0)
+ 369 01a2 22E3      		ldi r18,lo8(50)
+ 370               	.LVL19:
+ 371 01a4 00D0      		rcall LED_ChangeColor
+ 372               	.LBB18:
+ 373               	.LBB19:
+ 374               	.LM69:
+ 375 01a6 2091 0000 		lds r18,timer_1k
+ 376 01aa 3091 0000 		lds r19,(timer_1k)+1
+ 377               	.LVL20:
+ 378 01ae 2851      		subi r18,lo8(-(1000))
+ 379 01b0 3C4F      		sbci r19,hi8(-(1000))
+ 380               	.L27:
+ 381               	.LM70:
+ 382 01b2 8091 0000 		lds r24,timer_1k
+ 383 01b6 9091 0000 		lds r25,(timer_1k)+1
+ 384 01ba 8217      		cp r24,r18
+ 385 01bc 9307      		cpc r25,r19
+ 386 01be 01F4      		brne .L27
+ 387               	.LBE19:
+ 388               	.LBE18:
+ 389               	.LM71:
+ 390 01c0 80E0      		ldi r24,lo8(0)
+ 391 01c2 60E0      		ldi r22,lo8(0)
+ 392 01c4 4FEF      		ldi r20,lo8(-1)
+ 393 01c6 22E3      		ldi r18,lo8(50)
+ 394               	.LVL21:
+ 395 01c8 00D0      		rcall LED_ChangeColor
+ 396               	.LBB20:
+ 397               	.LBB21:
+ 398               	.LM72:
+ 399 01ca 2091 0000 		lds r18,timer_1k
+ 400 01ce 3091 0000 		lds r19,(timer_1k)+1
+ 401               	.LVL22:
+ 402 01d2 2851      		subi r18,lo8(-(1000))
+ 403 01d4 3C4F      		sbci r19,hi8(-(1000))
+ 404               	.L28:
+ 405               	.LM73:
+ 406 01d6 8091 0000 		lds r24,timer_1k
+ 407 01da 9091 0000 		lds r25,(timer_1k)+1
+ 408 01de 8217      		cp r24,r18
+ 409 01e0 9307      		cpc r25,r19
+ 410 01e2 01F4      		brne .L28
+ 411               	.LBE21:
+ 412               	.LBE20:
+ 413               	.LM74:
+ 414 01e4 80E0      		ldi r24,lo8(0)
+ 415 01e6 60E0      		ldi r22,lo8(0)
+ 416 01e8 40E0      		ldi r20,lo8(0)
+ 417 01ea 22E3      		ldi r18,lo8(50)
+ 418               	.LVL23:
+ 419 01ec 00D0      		rcall LED_ChangeColor
+ 420               	.LVL24:
+ 421               	.L43:
+ 422               	.LM75:
+ 423 01ee 00D0      		rcall USI_TWI_Receive_Byte
+ 424               	.LVL25:
+ 425               	.LM76:
+ 426 01f0 8F3A      		cpi r24,lo8(-81)
+ 427               	.LVL26:
+ 428 01f2 01F4      		brne .L29
+ 429               	.LM77:
+ 430 01f4 00D0      		rcall USI_TWI_Receive_Byte
+ 431               	.LVL27:
+ 432 01f6 E82E      		mov r14,r24
+ 433               	.LM78:
+ 434 01f8 00D0      		rcall USI_TWI_Receive_Byte
+ 435 01fa F82E      		mov r15,r24
+ 436               	.LM79:
+ 437 01fc 00D0      		rcall USI_TWI_Receive_Byte
+ 438 01fe 082F      		mov r16,r24
+ 439               	.LM80:
+ 440 0200 00D0      		rcall USI_TWI_Receive_Byte
+ 441 0202 182F      		mov r17,r24
+ 442               	.L31:
+ 443               	.LM81:
+ 444 0204 00D0      		rcall USI_TWI_Receive_Byte
+ 445               	.LM82:
+ 446 0206 00D0      		rcall USI_TWI_Data_In_Receive_Buffer
+ 447 0208 8823      		tst r24
+ 448 020a 01F4      		brne .L31
+ 449               	.LM83:
+ 450 020c 802F      		mov r24,r16
+ 451 020e 6E2D      		mov r22,r14
+ 452 0210 4F2D      		mov r20,r15
+ 453 0212 20E0      		ldi r18,lo8(0)
+ 454 0214 00D0      		rcall LED_ChangeColor
+ 455               	.LM84:
+ 456 0216 1123      		tst r17
+ 457 0218 01F0      		breq .L32
+ 458               	.LM85:
+ 459 021a 959A      		sbi 50-32,5
+ 460 021c 00C0      		rjmp .L43
+ 461               	.L32:
+ 462               	.LM86:
+ 463 021e 9598      		cbi 50-32,5
+ 464 0220 00C0      		rjmp .L43
+ 465               	.LVL28:
+ 466               	.L29:
+ 467               	.LM87:
+ 468 0222 8E3A      		cpi r24,lo8(-82)
+ 469 0224 01F4      		brne .L43
+ 470 0226 00C0      		rjmp .L42
+ 471               	.LVL29:
+ 472               	.L35:
+ 473               	.LM88:
+ 474 0228 00D0      		rcall USI_TWI_Receive_Byte
+ 475               	.LVL30:
+ 476               	.L42:
+ 477               	.LM89:
+ 478 022a 00D0      		rcall USI_TWI_Data_In_Receive_Buffer
+ 479               	.LVL31:
+ 480 022c 8823      		tst r24
+ 481 022e 01F4      		brne .L35
+ 482               	.LM90:
+ 483 0230 8E2D      		mov r24,r14
+ 484 0232 00D0      		rcall USI_TWI_Transmit_Byte
+ 485               	.LM91:
+ 486 0234 8F2D      		mov r24,r15
+ 487 0236 00D0      		rcall USI_TWI_Transmit_Byte
+ 488               	.LM92:
+ 489 0238 802F      		mov r24,r16
+ 490 023a 00D0      		rcall USI_TWI_Transmit_Byte
+ 491 023c 00C0      		rjmp .L43
+ 492               	.LFE6:
+ 494               	.global	rainbow
+ 495               		.data
+ 498               	rainbow:
+ 499 0000 0F        		.byte	15
+ 500 0001 00        		.byte	0
+ 501 0002 00        		.byte	0
+ 502 0003 0F        		.byte	15
+ 503 0004 00        		.byte	0
+ 504 0005 05        		.byte	5
+ 505 0006 0F        		.byte	15
+ 506 0007 00        		.byte	0
+ 507 0008 0A        		.byte	10
+ 508 0009 0F        		.byte	15
+ 509 000a 00        		.byte	0
+ 510 000b 0F        		.byte	15
+ 511 000c 0A        		.byte	10
+ 512 000d 00        		.byte	0
+ 513 000e 0F        		.byte	15
+ 514 000f 05        		.byte	5
+ 515 0010 00        		.byte	0
+ 516 0011 0F        		.byte	15
+ 517 0012 00        		.byte	0
+ 518 0013 00        		.byte	0
+ 519 0014 0F        		.byte	15
+ 520 0015 00        		.byte	0
+ 521 0016 05        		.byte	5
+ 522 0017 0F        		.byte	15
+ 523 0018 00        		.byte	0
+ 524 0019 0A        		.byte	10
+ 525 001a 0F        		.byte	15
+ 526 001b 00        		.byte	0
+ 527 001c 0F        		.byte	15
+ 528 001d 0F        		.byte	15
+ 529 001e 00        		.byte	0
+ 530 001f 0F        		.byte	15
+ 531 0020 0A        		.byte	10
+ 532 0021 00        		.byte	0
+ 533 0022 0F        		.byte	15
+ 534 0023 05        		.byte	5
+ 535 0024 00        		.byte	0
+ 536 0025 0F        		.byte	15
+ 537 0026 00        		.byte	0
+ 538 0027 05        		.byte	5
+ 539 0028 0F        		.byte	15
+ 540 0029 00        		.byte	0
+ 541 002a 0A        		.byte	10
+ 542 002b 0F        		.byte	15
+ 543 002c 00        		.byte	0
+ 544 002d 0F        		.byte	15
+ 545 002e 0F        		.byte	15
+ 546 002f 00        		.byte	0
+ 547 0030 0F        		.byte	15
+ 548 0031 0A        		.byte	10
+ 549 0032 00        		.byte	0
+ 550 0033 0F        		.byte	15
+ 551 0034 05        		.byte	5
+ 552 0035 00        		.byte	0
+ 553               	.global	color
+ 554               	.global	color
+ 555               		.section .bss
+ 558               	color:
+ 559 0000 0000      		.skip 2,0
+ 560               		.comm timer_1k,2,1
+ 625               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 Halo_Slave.c
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:2      *ABS*:0000003f __SREG__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:3      *ABS*:0000003e __SP_H__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:4      *ABS*:0000003d __SP_L__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:5      *ABS*:00000034 __CCP__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:18     .text:00000000 __vector_6
+                            *COM*:00000002 timer_1k
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:52     .text:00000032 LED_ChangeColor
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:114    .text:00000072 checksum
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:153    .text:00000092 ioinit
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:221    .text:000000d8 delay_ms
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:248    .text:000000f4 main
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:498    .data:00000000 rainbow
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//cc7g3wCb.s:558    .bss:00000000 color
+
+UNDEFINED SYMBOLS
+USI_TWI_Slave_Initialise
+USI_TWI_Receive_Byte
+USI_TWI_Data_In_Receive_Buffer
+USI_TWI_Transmit_Byte
+__do_copy_data
+__do_clear_bss

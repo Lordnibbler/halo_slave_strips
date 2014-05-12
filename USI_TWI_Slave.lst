@@ -1,0 +1,373 @@
+   1               		.file	"USI_TWI_Slave.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               	.global	Flush_TWI_Buffers
+  18               	Flush_TWI_Buffers:
+  19               	.LFB2:
+  20               	.LM1:
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	.LM2:
+  24 0000 1092 0000 		sts TWI_RxTail,__zero_reg__
+  25               	.LM3:
+  26 0004 1092 0000 		sts TWI_RxHead,__zero_reg__
+  27               	.LM4:
+  28 0008 1092 0000 		sts TWI_TxTail,__zero_reg__
+  29               	.LM5:
+  30 000c 1092 0000 		sts TWI_TxHead,__zero_reg__
+  31               	/* epilogue start */
+  32               	.LM6:
+  33 0010 0895      		ret
+  34               	.LFE2:
+  36               	.global	USI_TWI_Slave_Initialise
+  38               	USI_TWI_Slave_Initialise:
+  39               	.LFB3:
+  40               	.LM7:
+  41               	.LVL0:
+  42               	/* prologue: function */
+  43               	/* frame size = 0 */
+  44               	.LBB4:
+  45               	.LBB5:
+  46               	.LM8:
+  47 0012 1092 0000 		sts TWI_RxTail,__zero_reg__
+  48               	.LM9:
+  49 0016 1092 0000 		sts TWI_RxHead,__zero_reg__
+  50               	.LM10:
+  51 001a 1092 0000 		sts TWI_TxTail,__zero_reg__
+  52               	.LM11:
+  53 001e 1092 0000 		sts TWI_TxHead,__zero_reg__
+  54               	.LBE5:
+  55               	.LBE4:
+  56               	.LM12:
+  57 0022 8093 0000 		sts TWI_slaveAddress,r24
+  58               	.LM13:
+  59 0026 C79A      		sbi 56-32,7
+  60               	.LM14:
+  61 0028 C59A      		sbi 56-32,5
+  62               	.LM15:
+  63 002a BF9A      		sbi 55-32,7
+  64               	.LM16:
+  65 002c BD98      		cbi 55-32,5
+  66               	.LM17:
+  67 002e 88EA      		ldi r24,lo8(-88)
+  68               	.LVL1:
+  69 0030 8DB9      		out 45-32,r24
+  70               	.LM18:
+  71 0032 80EF      		ldi r24,lo8(-16)
+  72 0034 8EB9      		out 46-32,r24
+  73               	/* epilogue start */
+  74               	.LM19:
+  75 0036 0895      		ret
+  76               	.LFE3:
+  78               	.global	USI_TWI_Transmit_Byte
+  80               	USI_TWI_Transmit_Byte:
+  81               	.LFB4:
+  82               	.LM20:
+  83               	.LVL2:
+  84               	/* prologue: function */
+  85               	/* frame size = 0 */
+  86 0038 282F      		mov r18,r24
+  87               	.LM21:
+  88 003a 9091 0000 		lds r25,TWI_TxHead
+  89               	.LVL3:
+  90 003e 9F5F      		subi r25,lo8(-(1))
+  91 0040 9F70      		andi r25,lo8(15)
+  92               	.LVL4:
+  93               	.L6:
+  94               	.LM22:
+  95 0042 8091 0000 		lds r24,TWI_TxTail
+  96 0046 9817      		cp r25,r24
+  97 0048 01F0      		breq .L6
+  98               	.LM23:
+  99 004a E92F      		mov r30,r25
+ 100 004c F0E0      		ldi r31,lo8(0)
+ 101               	.LVL5:
+ 102 004e E050      		subi r30,lo8(-(TWI_TxBuf))
+ 103 0050 F040      		sbci r31,hi8(-(TWI_TxBuf))
+ 104               	.LVL6:
+ 105 0052 2083      		st Z,r18
+ 106               	.LM24:
+ 107 0054 9093 0000 		sts TWI_TxHead,r25
+ 108               	/* epilogue start */
+ 109               	.LM25:
+ 110 0058 0895      		ret
+ 111               	.LFE4:
+ 113               	.global	USI_TWI_Receive_Byte
+ 115               	USI_TWI_Receive_Byte:
+ 116               	.LFB5:
+ 117               	.LM26:
+ 118               	/* prologue: function */
+ 119               	/* frame size = 0 */
+ 120               	.LM27:
+ 121 005a 9091 0000 		lds r25,TWI_RxTail
+ 122               	.LVL7:
+ 123               	.L10:
+ 124               	.LM28:
+ 125 005e 8091 0000 		lds r24,TWI_RxHead
+ 126 0062 8917      		cp r24,r25
+ 127 0064 01F0      		breq .L10
+ 128               	.LM29:
+ 129 0066 E091 0000 		lds r30,TWI_RxTail
+ 130               	.LVL8:
+ 131 006a EF5F      		subi r30,lo8(-(1))
+ 132 006c EF70      		andi r30,lo8(15)
+ 133               	.LM30:
+ 134 006e E093 0000 		sts TWI_RxTail,r30
+ 135 0072 F0E0      		ldi r31,lo8(0)
+ 136               	.LVL9:
+ 137 0074 E050      		subi r30,lo8(-(TWI_RxBuf))
+ 138 0076 F040      		sbci r31,hi8(-(TWI_RxBuf))
+ 139               	.LVL10:
+ 140               	.LM31:
+ 141 0078 8081      		ld r24,Z
+ 142               	/* epilogue start */
+ 143 007a 0895      		ret
+ 144               	.LFE5:
+ 146               	.global	USI_TWI_Data_In_Receive_Buffer
+ 148               	USI_TWI_Data_In_Receive_Buffer:
+ 149               	.LFB6:
+ 150               	.LM32:
+ 151               	/* prologue: function */
+ 152               	/* frame size = 0 */
+ 153               	.LM33:
+ 154 007c 9091 0000 		lds r25,TWI_RxTail
+ 155               	.LVL11:
+ 156               	.LM34:
+ 157 0080 8091 0000 		lds r24,TWI_RxHead
+ 158 0084 20E0      		ldi r18,lo8(0)
+ 159 0086 8913      		cpse r24,r25
+ 160 0088 21E0      		ldi r18,lo8(1)
+ 161               	.L14:
+ 162               	.LM35:
+ 163 008a 822F      		mov r24,r18
+ 164               	/* epilogue start */
+ 165 008c 0895      		ret
+ 166               	.LFE6:
+ 168               	.global	__vector_15
+ 170               	__vector_15:
+ 171               	.LFB7:
+ 172               	.LM36:
+ 173 008e 1F92      		push __zero_reg__
+ 174 0090 0F92      		push r0
+ 175 0092 0FB6      		in r0,__SREG__
+ 176 0094 0F92      		push r0
+ 177 0096 1124      		clr __zero_reg__
+ 178 0098 8F93      		push r24
+ 179               	/* prologue: Signal */
+ 180               	/* frame size = 0 */
+ 181               	.LM37:
+ 182 009a 8EB1      		in r24,46-32
+ 183               	.LVL12:
+ 184               	.LM38:
+ 185 009c 1092 0000 		sts USI_TWI_Overflow_State,__zero_reg__
+ 186               	.LM39:
+ 187 00a0 BD98      		cbi 55-32,5
+ 188               	.LM40:
+ 189 00a2 86B3      		in r24,54-32
+ 190               	.LVL13:
+ 191               	.LM41:
+ 192 00a4 88EF      		ldi r24,lo8(-8)
+ 193 00a6 8DB9      		out 45-32,r24
+ 194               	.LM42:
+ 195 00a8 80EF      		ldi r24,lo8(-16)
+ 196 00aa 8EB9      		out 46-32,r24
+ 197               	/* epilogue start */
+ 198               	.LM43:
+ 199 00ac 8F91      		pop r24
+ 200 00ae 0F90      		pop r0
+ 201 00b0 0FBE      		out __SREG__,r0
+ 202 00b2 0F90      		pop r0
+ 203 00b4 1F90      		pop __zero_reg__
+ 204 00b6 1895      		reti
+ 205               	.LFE7:
+ 207               	.global	__vector_16
+ 209               	__vector_16:
+ 210               	.LFB8:
+ 211               	.LM44:
+ 212 00b8 1F92      		push __zero_reg__
+ 213 00ba 0F92      		push r0
+ 214 00bc 0FB6      		in r0,__SREG__
+ 215 00be 0F92      		push r0
+ 216 00c0 1124      		clr __zero_reg__
+ 217 00c2 8F93      		push r24
+ 218 00c4 9F93      		push r25
+ 219 00c6 EF93      		push r30
+ 220 00c8 FF93      		push r31
+ 221               	/* prologue: Signal */
+ 222               	/* frame size = 0 */
+ 223               	.LM45:
+ 224 00ca 8091 0000 		lds r24,USI_TWI_Overflow_State
+ 225 00ce 8230      		cpi r24,lo8(2)
+ 226 00d0 01F0      		breq .L24
+ 227 00d2 8330      		cpi r24,lo8(3)
+ 228 00d4 00F4      		brsh .L28
+ 229 00d6 8823      		tst r24
+ 230 00d8 01F0      		breq .L22
+ 231 00da 8130      		cpi r24,lo8(1)
+ 232 00dc 01F0      		breq .+2
+ 233 00de 00C0      		rjmp .L34
+ 234 00e0 00C0      		rjmp .L23
+ 235               	.L28:
+ 236 00e2 8430      		cpi r24,lo8(4)
+ 237 00e4 01F0      		breq .L26
+ 238 00e6 8430      		cpi r24,lo8(4)
+ 239 00e8 00F0      		brlo .L25
+ 240 00ea 8530      		cpi r24,lo8(5)
+ 241 00ec 01F0      		breq .+2
+ 242 00ee 00C0      		rjmp .L34
+ 243 00f0 00C0      		rjmp .L41
+ 244               	.L22:
+ 245               	.LM46:
+ 246 00f2 8FB1      		in r24,47-32
+ 247 00f4 8823      		tst r24
+ 248 00f6 01F0      		breq .L29
+ 249 00f8 8FB1      		in r24,47-32
+ 250 00fa 8695      		lsr r24
+ 251 00fc 9091 0000 		lds r25,TWI_slaveAddress
+ 252 0100 8917      		cp r24,r25
+ 253 0102 01F4      		brne .L33
+ 254               	.L29:
+ 255               	.LM47:
+ 256 0104 789B      		sbis 47-32,0
+ 257 0106 00C0      		rjmp .L40
+ 258               	.LM48:
+ 259 0108 81E0      		ldi r24,lo8(1)
+ 260 010a 00C0      		rjmp .L39
+ 261               	.L25:
+ 262               	.LM49:
+ 263 010c 8FB1      		in r24,47-32
+ 264 010e 8823      		tst r24
+ 265 0110 01F4      		brne .L33
+ 266               	.L23:
+ 267               	.LM50:
+ 268 0112 9091 0000 		lds r25,TWI_TxTail
+ 269               	.LVL14:
+ 270               	.LM51:
+ 271 0116 8091 0000 		lds r24,TWI_TxHead
+ 272 011a 8917      		cp r24,r25
+ 273 011c 01F0      		breq .L33
+ 274               	.LM52:
+ 275 011e 8091 0000 		lds r24,TWI_TxTail
+ 276 0122 8F5F      		subi r24,lo8(-(1))
+ 277 0124 8F70      		andi r24,lo8(15)
+ 278 0126 8093 0000 		sts TWI_TxTail,r24
+ 279               	.LM53:
+ 280 012a E091 0000 		lds r30,TWI_TxTail
+ 281 012e F0E0      		ldi r31,lo8(0)
+ 282 0130 E050      		subi r30,lo8(-(TWI_TxBuf))
+ 283 0132 F040      		sbci r31,hi8(-(TWI_TxBuf))
+ 284 0134 8081      		ld r24,Z
+ 285 0136 8FB9      		out 47-32,r24
+ 286               	.LM54:
+ 287 0138 82E0      		ldi r24,lo8(2)
+ 288 013a 8093 0000 		sts USI_TWI_Overflow_State,r24
+ 289               	.LM55:
+ 290 013e BD9A      		sbi 55-32,5
+ 291 0140 00C0      		rjmp .L38
+ 292               	.L33:
+ 293               	.LM56:
+ 294 0142 88EA      		ldi r24,lo8(-88)
+ 295 0144 8DB9      		out 45-32,r24
+ 296 0146 00C0      		rjmp .L38
+ 297               	.LVL15:
+ 298               	.L24:
+ 299               	.LM57:
+ 300 0148 83E0      		ldi r24,lo8(3)
+ 301 014a 8093 0000 		sts USI_TWI_Overflow_State,r24
+ 302               	.LM58:
+ 303 014e BD98      		cbi 55-32,5
+ 304 0150 1FB8      		out 47-32,__zero_reg__
+ 305 0152 00C0      		rjmp .L36
+ 306               	.L26:
+ 307               	.LM59:
+ 308 0154 85E0      		ldi r24,lo8(5)
+ 309 0156 8093 0000 		sts USI_TWI_Overflow_State,r24
+ 310               	.LM60:
+ 311 015a BD98      		cbi 55-32,5
+ 312               	.LVL16:
+ 313               	.L38:
+ 314 015c 80E7      		ldi r24,lo8(112)
+ 315 015e 00C0      		rjmp .L37
+ 316               	.LVL17:
+ 317               	.L41:
+ 318               	.LM61:
+ 319 0160 9FB1      		in r25,47-32
+ 320               	.LVL18:
+ 321               	.LM62:
+ 322 0162 8091 0000 		lds r24,TWI_RxHead
+ 323 0166 8F5F      		subi r24,lo8(-(1))
+ 324 0168 8F70      		andi r24,lo8(15)
+ 325 016a 8093 0000 		sts TWI_RxHead,r24
+ 326               	.LM63:
+ 327 016e E091 0000 		lds r30,TWI_RxHead
+ 328 0172 F0E0      		ldi r31,lo8(0)
+ 329 0174 E050      		subi r30,lo8(-(TWI_RxBuf))
+ 330 0176 F040      		sbci r31,hi8(-(TWI_RxBuf))
+ 331 0178 9083      		st Z,r25
+ 332               	.L40:
+ 333               	.LM64:
+ 334 017a 84E0      		ldi r24,lo8(4)
+ 335               	.L39:
+ 336 017c 8093 0000 		sts USI_TWI_Overflow_State,r24
+ 337               	.LM65:
+ 338 0180 1FB8      		out 47-32,__zero_reg__
+ 339 0182 BD9A      		sbi 55-32,5
+ 340               	.L36:
+ 341 0184 8EE7      		ldi r24,lo8(126)
+ 342               	.LVL19:
+ 343               	.L37:
+ 344 0186 8EB9      		out 46-32,r24
+ 345               	.L34:
+ 346               	/* epilogue start */
+ 347               	.LM66:
+ 348 0188 FF91      		pop r31
+ 349 018a EF91      		pop r30
+ 350 018c 9F91      		pop r25
+ 351               	.LVL20:
+ 352 018e 8F91      		pop r24
+ 353 0190 0F90      		pop r0
+ 354 0192 0FBE      		out __SREG__,r0
+ 355 0194 0F90      		pop r0
+ 356 0196 1F90      		pop __zero_reg__
+ 357 0198 1895      		reti
+ 358               	.LFE8:
+ 360               		.lcomm TWI_slaveAddress,1
+ 361               		.lcomm USI_TWI_Overflow_State,1
+ 362               		.lcomm TWI_RxBuf,16
+ 363               		.lcomm TWI_RxHead,1
+ 364               		.lcomm TWI_RxTail,1
+ 365               		.lcomm TWI_TxBuf,16
+ 366               		.lcomm TWI_TxHead,1
+ 367               		.lcomm TWI_TxTail,1
+ 440               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 USI_TWI_Slave.c
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:2      *ABS*:0000003f __SREG__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:3      *ABS*:0000003e __SP_H__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:4      *ABS*:0000003d __SP_L__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:5      *ABS*:00000034 __CCP__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:6      *ABS*:00000000 __tmp_reg__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:7      *ABS*:00000001 __zero_reg__
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:18     .text:00000000 Flush_TWI_Buffers
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:363    .bss:00000013 TWI_RxTail
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:362    .bss:00000012 TWI_RxHead
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:366    .bss:00000025 TWI_TxTail
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:365    .bss:00000024 TWI_TxHead
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:38     .text:00000012 USI_TWI_Slave_Initialise
+                             .bss:00000000 TWI_slaveAddress
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:80     .text:00000038 USI_TWI_Transmit_Byte
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:364    .bss:00000014 TWI_TxBuf
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:115    .text:0000005a USI_TWI_Receive_Byte
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:361    .bss:00000002 TWI_RxBuf
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:148    .text:0000007c USI_TWI_Data_In_Receive_Buffer
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:170    .text:0000008e __vector_15
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:360    .bss:00000001 USI_TWI_Overflow_State
+/var/folders/YW/YW2WNC48GMGSnf1b3w8fxE+++TM/-Tmp-//ccLYYUTb.s:209    .text:000000b8 __vector_16
+
+UNDEFINED SYMBOLS
+__do_clear_bss
